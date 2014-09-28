@@ -1,0 +1,28 @@
+{
+  "name": "grunt-atom-css",
+  "description": "A grunt task for your CSS.",
+  "version": "0.0.1",
+  "homepage": "https://github.com/cuzzo/grunt-atom-css",
+  "dependencies": {
+    "pegjs": "0.8.0"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.7",
+    "atom-css": "~0.0.1",
+    "q": "~1.0.1",
+    "underscore": "~1.6.0"
+  },
+  "scripts": {
+  },
+  "licenses": [
+    {
+      "type": "BSD",
+      "url": "http://opensource.org/licences/BSD-2-Clause"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cuzzo/atom-css"
+  }
+}
