@@ -4,7 +4,8 @@
   "version": "0.0.1",
   "homepage": "https://github.com/cuzzo/grunt-atom-css",
   "dependencies": {
-    "pegjs": "0.8.0"
+    "pegjs": "0.8.0",
+    "atom-css": "0.0.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
