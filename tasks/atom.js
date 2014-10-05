@@ -1,13 +1,16 @@
 var fs = require("fs"),
+    path = require("path"),
     glob = require("glob"),
     Q = require("q"),
     _ = require("underscore")._;
 
     translate = require("atom-css").translate,
     Splitter = require("atom-css").Splitter,
-    splitter = new Splitter();
+    splitter = new Splitter(),
 
-MOLECULE_EXT = ".atom";
+    EXT_RGX = /\.[^/.]+$/,
+    REL_START_RGX = /^\.\.\//,
+    MOLECULE_EXT = ".atom";
 
 var readFilePromise = Q.denodeify(fs.readFile.bind(fs));
 
@@ -15,10 +18,8 @@ var get_split_molecules = function(molecular_rules) {
   return split_molecules = splitter.split(molecular_rules);
 };
 
-var compile_split_molecules = function(split_molecules) {
-  return "@import \"_variables\";\n"
-      + "@import \"_mixins\";\n"
-      + "@import \"atoms\";\n\n"
+var compile_split_molecules = function(split_molecules, sass_import_path) {
+  return "@import \"" + sass_import_path + "\";\n\n"
       + splitter.rewrite(split_molecules).join("\n");
 };
 
@@ -50,7 +51,7 @@ var glob_molecules = function(src_dir, cb) {
 };
 
 
-var compile = function(molecule_path) {
+var compile = function(molecule_path, sass_import_path) {
   var deferred = Q.defer();
   glob_molecules(molecule_path, function(err, matches) {
     if (err) return deferred.reject(err);
@@ -63,7 +64,10 @@ var compile = function(molecule_path) {
         var molecular_rules = compile_molecular_rules(resp),
             split_rules = get_split_molecules(molecular_rules),
             molecular_js = compile_molecular_js(molecular_rules, split_rules),
-            split_molecules_sass = compile_split_molecules(split_rules);
+            split_molecules_sass = compile_split_molecules(
+                split_rules,
+                sass_import_path
+              );
 
         deferred.resolve({
           molecules: matches,
@@ -83,9 +87,14 @@ module.exports = function(grunt) {
     var done = this.async(),
         options = grunt.config.get("atom.options");
 
-    compile(
-        options.molecule_path
+    var sass_import_path = path.relative(
+        options.split_molecules_path,
+        options.sass_import_path
       )
+      .replace(EXT_RGX, "")
+      .replace(REL_START_RGX, "");
+
+    compile(options.molecule_path, sass_import_path)
       .then(function(resp) {
         resp.molecules.forEach(function(molecule) {
           grunt.log.writeln("[atom] compiling molecule: " + molecule.cyan);

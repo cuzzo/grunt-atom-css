@@ -23,7 +23,8 @@ module.exports = function(grunt) {
       options: {
         molecule_path: "example",
         molecular_rules_path: "example/molecular-rules.js",
-        split_molecules_path: "example/sass/split-molecules.scss"
+        split_molecules_path: "example/sass/split-molecules.scss",
+        sass_import_path: "example/sass/_imports.scss"
       }
     },
 
@@ -49,6 +50,13 @@ module.exports = function(grunt) {
 ```
 
 Then you can just run `grunt atom` to compile all your ATOM CSS files. Alternatively, you can run `grunt watch` to compile all your ATOM CSS files any time you modify one of them.
+
+# Options
+
+* `molecule_path` - The path where your .atom files are stored.
+* `molecular_rules_path` - The path at which to generate an imbeddable JavaScript Molecular Rules dictionary--the table that stores the CSS atoms that compose each of your CSS molecules.
+* `split_molecules_path` - The path at which to generate the SASS file for CSS pseudo-class rules.
+* `sass_import_path` - The SASS dependencies for psuedo-class rules.
 
 # Resources
 
